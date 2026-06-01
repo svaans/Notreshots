@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notre Shots — Carta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=Inter:wght@300;400;500;600&family=Cinzel:wght@700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── TOKENS ─────────────────────────────────────────── */
+    :root {
+      --bg:        #080c0a;
+      --surface:   #0f1511;
+      --card:      #131a14;
+      --border:    #1e2b1f;
+      --neon:      #39ff6e;
+      --neon-dim:  #1a7a35;
+      --neon-glow: rgba(57,255,110,.18);
+      --gold:      #c9a84c;
+      --text:      #d4e8d6;
+      --muted:     #6a8870;
+      --promo:     #ff4d6d;
+      --danger:    #ff4d4d;
+      --radius:    12px;
+      --font-body: 'Inter', sans-serif;
+      --font-head: 'Cinzel', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100dvh;
+    }
+
+    /* ─── HEADER ─────────────────────────────────────────── */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(8,12,10,.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px 10px;
+      text-align: center;
+    }
+    .logo-oval {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: 2px solid var(--neon); border-radius: 50px;
+      padding: 5px 18px;
+      box-shadow: 0 0 16px var(--neon-glow), inset 0 0 10px rgba(57,255,110,.06);
+    }
+    .logo-notre { font-family: 'MedievalSharp', serif; font-size: 1.6rem; color: var(--neon); text-shadow: 0 0 12px var(--neon); letter-spacing: 1px; }
+    .logo-shots { font-size: .8rem; font-weight: 600; color: var(--text); letter-spacing: 3px; text-transform: uppercase; align-self: flex-end; padding-bottom: 3px; }
+    .header-sub { font-size: .68rem; color: var(--muted); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; }
+
+    /* ─── PROMO BANNER ───────────────────────────────────── */
+    .promo-banner {
+      margin: 16px 16px 0;
+      background: linear-gradient(135deg,#1a0a10,#200d15);
+      border: 1px solid rgba(255,77,109,.3); border-radius: var(--radius);
+      padding: 14px 16px; position: relative; overflow: hidden;
+    }
+    .promo-banner::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at top left,rgba(255,77,109,.08),transparent 60%); }
+    .promo-label { font-family: var(--font-head); font-size:.65rem; letter-spacing:3px; color:var(--promo); text-transform:uppercase; margin-bottom:6px; }
+    .promo-tag { font-size:.68rem; color:rgba(255,77,109,.7); font-style:italic; margin-bottom:10px; }
+    .promo-grid { display:grid; grid-template-columns:1fr 1fr; gap:6px; }
+    .promo-item { background:rgba(255,255,255,.03); border-radius:8px; padding:8px 10px; display:flex; justify-content:space-between; align-items:center; border:1px solid rgba(255,77,109,.15); }
+    .promo-name { font-size:.75rem; color:var(--text); }
+    .promo-price { font-size:.8rem; font-weight:600; color:var(--promo); }
+
+    /* ─── LAUNCH ─────────────────────────────────────────── */
+    .launch-banner {
+      margin:10px 16px 0;
+      background:linear-gradient(135deg,#0a1200,#0d1800);
+      border:1px solid var(--neon-dim); border-radius:var(--radius);
+      padding:12px 16px; display:flex; justify-content:space-between; align-items:center;
+      position:relative; overflow:hidden;
+    }
+    .launch-banner::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at right,rgba(57,255,110,.07),transparent 60%); }
+    .launch-tag { font-size:.63rem; letter-spacing:2px; color:var(--neon); text-transform:uppercase; font-weight:600; }
+    .launch-name { font-size:.9rem; color:var(--text); font-weight:500; }
+    .launch-price { font-size:1.1rem; font-weight:700; color:var(--neon); }
+
+    /* ─── NAV TABS ───────────────────────────────────────── */
+    .nav-wrap { position:sticky; top:72px; z-index:90; background:var(--bg); border-bottom:1px solid var(--border); overflow-x:auto; scrollbar-width:none; }
+    .nav-wrap::-webkit-scrollbar { display:none; }
+    nav { display:flex; padding:0 12px; gap:4px; min-width:max-content; }
+    nav button { background:none; border:none; border-bottom:2px solid transparent; padding:12px 14px; font-size:.78rem; font-weight:500; letter-spacing:.5px; color:var(--muted); cursor:pointer; white-space:nowrap; transition:color .2s,border-color .2s; font-family:var(--font-body); }
+    nav button.active { color:var(--neon); border-bottom-color:var(--neon); text-shadow:0 0 8px var(--neon-glow); }
+    nav button:hover:not(.active) { color:var(--text); }
+
+    /* ─── SECTIONS ───────────────────────────────────────── */
+    main { padding:16px 16px 80px; }
+    .section { display:none; }
+    .section.active { display:block; }
+    .section-title { font-family:var(--font-head); font-size:1rem; color:var(--neon); text-transform:uppercase; letter-spacing:3px; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid var(--border); }
+    .items-list { display:flex; flex-direction:column; gap:2px; }
+    .item { display:flex; justify-content:space-between; align-items:center; padding:11px 14px; border-radius:8px; transition:background .15s; }
+    .item:hover { background:var(--card); }
+    .item-name { font-size:.88rem; color:var(--text); }
+    .item-price { font-size:.85rem; font-weight:600; color:var(--gold); white-space:nowrap; margin-left:12px; flex-shrink:0; }
+    .item-divider { flex:1; height:1px; background:repeating-linear-gradient(90deg,var(--border) 0,var(--border) 4px,transparent 4px,transparent 8px); margin:0 10px; }
+    .item.unavailable { opacity:.4; }
+    .item.unavailable .item-name { text-decoration: line-through; }
+    .item.unavailable .item-price::after { content: ' · Agotado'; font-size:.7rem; color:var(--danger); font-weight:400; }
+    .item.unavailable .item-price { color: var(--muted); }
+
+    /* ─── SEARCH ─────────────────────────────────────────── */
+    .search-wrap { padding:12px 16px 0; }
+    .search-input { width:100%; background:var(--card); border:1px solid var(--border); border-radius:30px; padding:10px 18px; font-size:.85rem; color:var(--text); font-family:var(--font-body); outline:none; transition:border-color .2s; }
+    .search-input:focus { border-color:var(--neon-dim); }
+    .search-input::placeholder { color:var(--muted); }
+    #search-results { margin-top:12px; }
+    .search-empty { text-align:center; color:var(--muted); padding:30px 0; font-size:.85rem; }
+    .result-category { font-size:.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); padding:4px 14px; }
+
+    /* ─── FOOTER ─────────────────────────────────────────── */
+    footer {
+      position:fixed; bottom:0; left:0; right:0;
+      background:rgba(8,12,10,.95); border-top:1px solid var(--border);
+      padding:10px 20px; display:flex; justify-content:space-between; align-items:center;
+      backdrop-filter:blur(12px); z-index:80;
+    }
+    .footer-location { font-size:.65rem; color:var(--muted); line-height:1.4; }
+    .footer-ig { font-size:.72rem; color:var(--neon); font-weight:600; letter-spacing:.5px; text-decoration:none; }
+    .admin-btn { background:none; border:none; cursor:pointer; font-size:.75rem; color:var(--muted); padding:4px 8px; border-radius:6px; transition:color .2s; }
+    .admin-btn:hover { color:var(--text); }
+
+    /* ══════════════════════════════════════════════════════
+       ADMIN — PIN MODAL
+    ══════════════════════════════════════════════════════ */
+    .modal-overlay {
+      display:none; position:fixed; inset:0; z-index:200;
+      background:rgba(0,0,0,.8); backdrop-filter:blur(6px);
+      align-items:center; justify-content:center;
+    }
+    .modal-overlay.open { display:flex; }
+    .modal {
+      background:var(--surface); border:1px solid var(--border); border-radius:16px;
+      padding:28px 24px; width:min(320px,90vw); text-align:center;
+    }
+    .modal h3 { font-family:var(--font-head); font-size:.9rem; letter-spacing:2px; color:var(--neon); text-transform:uppercase; margin-bottom:6px; }
+    .modal p { font-size:.78rem; color:var(--muted); margin-bottom:20px; }
+    .pin-dots { display:flex; justify-content:center; gap:12px; margin-bottom:20px; }
+    .pin-dot { width:12px; height:12px; border-radius:50%; background:var(--border); transition:background .2s; }
+    .pin-dot.filled { background:var(--neon); box-shadow:0 0 8px var(--neon-glow); }
+    .pin-pad { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .pin-key {
+      background:var(--card); border:1px solid var(--border); border-radius:10px;
+      padding:14px; font-size:1.1rem; font-weight:600; color:var(--text);
+      cursor:pointer; transition:background .15s,border-color .15s;
+    }
+    .pin-key:hover { background:var(--border); border-color:var(--neon-dim); }
+    .pin-key.del { font-size:.85rem; color:var(--muted); }
+    .pin-key.del:hover { color:var(--danger); }
+    .pin-error { font-size:.75rem; color:var(--danger); margin-top:12px; min-height:18px; }
+    .modal-close { background:none; border:none; color:var(--muted); font-size:.8rem; cursor:pointer; margin-top:14px; text-decoration:underline; }
+
+    /* ══════════════════════════════════════════════════════
+       ADMIN — PANEL
+    ══════════════════════════════════════════════════════ */
+    #admin-panel {
+      display:none; position:fixed; inset:0; z-index:190;
+      background:var(--bg); overflow-y:auto;
+    }
+    #admin-panel.open { display:block; }
+
+    .admin-header {
+      position:sticky; top:0; background:rgba(8,12,10,.95);
+      backdrop-filter:blur(12px); border-bottom:1px solid var(--border);
+      padding:14px 16px; display:flex; align-items:center; justify-content:space-between; z-index:10;
+    }
+    .admin-title { font-family:var(--font-head); font-size:.85rem; letter-spacing:2px; color:var(--neon); text-transform:uppercase; }
+    .admin-close { background:none; border:1px solid var(--border); border-radius:8px; color:var(--muted); font-size:.78rem; padding:6px 12px; cursor:pointer; transition:color .2s,border-color .2s; }
+    .admin-close:hover { color:var(--text); border-color:var(--text); }
+
+    .admin-body { padding:16px 16px 100px; }
+
+    .admin-section { margin-bottom:28px; }
+    .admin-section-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--border);
+    }
+    .admin-section-title { font-family:var(--font-head); font-size:.8rem; letter-spacing:2px; color:var(--neon); text-transform:uppercase; }
+
+    /* admin item row */
+    .admin-item {
+      display:flex; align-items:center; gap:8px;
+      padding:8px 0; border-bottom:1px solid rgba(255,255,255,.04);
+    }
+    .admin-item:last-child { border-bottom:none; }
+    .admin-input {
+      background:var(--card); border:1px solid var(--border); border-radius:8px;
+      padding:8px 10px; color:var(--text); font-family:var(--font-body); font-size:.82rem;
+      outline:none; transition:border-color .2s;
+    }
+    .admin-input:focus { border-color:var(--neon-dim); }
+    .admin-input.name-input { flex:1; }
+    .admin-input.price-input { width:90px; text-align:right; color:var(--gold); }
+    .del-item-btn { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1rem; padding:4px; line-height:1; transition:color .2s; flex-shrink:0; }
+    .del-item-btn:hover { color:var(--danger); }
+    .avail-toggle { background:none; border:1px solid var(--border); border-radius:6px; font-size:.65rem; padding:4px 7px; cursor:pointer; white-space:nowrap; color:var(--muted); transition:all .15s; flex-shrink:0; }
+    .avail-toggle.out { border-color:var(--danger); color:var(--danger); }
+    .avail-toggle.in  { border-color:var(--neon-dim); color:var(--neon); }
+
+    /* add row */
+    .add-row { display:flex; gap:8px; margin-top:10px; }
+    .add-btn {
+      background:rgba(57,255,110,.08); border:1px solid var(--neon-dim); border-radius:8px;
+      color:var(--neon); font-size:.78rem; font-weight:600; padding:9px 14px;
+      cursor:pointer; white-space:nowrap; transition:background .15s;
+    }
+    .add-btn:hover { background:rgba(57,255,110,.15); }
+
+    /* special sections */
+    .admin-special { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:16px; }
+    .admin-special-title { font-size:.68rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+    .admin-special .admin-item { padding:6px 0; }
+
+    /* save bar */
+    .save-bar {
+      position:fixed; bottom:0; left:0; right:0; z-index:195;
+      background:rgba(8,12,10,.97); border-top:1px solid var(--border);
+      padding:12px 16px; display:flex; gap:10px; align-items:center;
+    }
+    .save-btn {
+      flex:1; background:var(--neon); color:#060e08; font-weight:700; font-size:.88rem;
+      border:none; border-radius:10px; padding:13px; cursor:pointer;
+      font-family:var(--font-body); transition:opacity .2s;
+    }
+    .save-btn:hover { opacity:.9; }
+    .reset-btn {
+      background:none; border:1px solid var(--border); border-radius:10px;
+      color:var(--muted); font-size:.78rem; padding:13px 16px; cursor:pointer;
+      font-family:var(--font-body); transition:color .2s,border-color .2s;
+    }
+    .reset-btn:hover { color:var(--danger); border-color:var(--danger); }
+    .save-status { font-size:.75rem; color:var(--neon); min-width:60px; text-align:center; }
+
+    /* change PIN */
+    .change-pin-wrap { margin-top:20px; padding-top:16px; border-top:1px solid var(--border); }
+    .change-pin-title { font-size:.68rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+    .change-pin-row { display:flex; gap:8px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     DATA DEFAULT — fuente de verdad si no hay datos en localStorage
+═══════════════════════════════════════════════════════ -->
+<script>
+const DEFAULT_MENU = {
+  cocteles: {
+    label: "Cócteles",
+    items: [
+      { name: "Margarita",               price: 14000 },
+      { name: "Margarita Blue",           price: 13000 },
+      { name: "Margarita Mango Biche",    price: 13000 },
+      { name: "Tequila Sunrise",          price: 14000 },
+      { name: "Submarino",                price: 14000 },
+      { name: "Sueños Rosa",              price: 16000 },
+      { name: "Mojito",                   price: 12000 },
+      { name: "Mojito Maracuyá",          price: 16000 },
+      { name: "Daikiri",                  price: 14000 },
+      { name: "Sex on the Beach",         price: 14000 },
+      { name: "Cosmopolitan",             price: 14000 },
+      { name: "Manhattan",                price: 14000 },
+      { name: "Old Fashioned",            price: 15000 },
+      { name: "Alexander",                price: 14000 },
+      { name: "B52",                      price: 14000 },
+      { name: "Martini",                  price: 14000 },
+      { name: "Summer Cream",             price: 15000 },
+      { name: "Pink Cherry",              price: 15000 },
+      { name: "Banana Cream",             price: 16000 },
+      { name: "Café Irlandés",            price: 15000 },
+      { name: "Dublin",                   price: 16000 },
+      { name: "Cuba Libre",               price: 14000 },
+      { name: "Piña Colada con Licor",    price: 15000 },
+      { name: "Tom Collins",              price: 14000 },
+      { name: "Sirenita",                 price: 16000 },
+      { name: "Andrómeda",                price: 15000 },
+      { name: "Orgasmo",                  price: 15000 },
+      { name: "Cabeza de Jabalí",         price: 16000 },
+      { name: "Laguna Azul",              price: 15000 },
+      { name: "Daño Cerebral",            price: 15000 },
+      { name: "Long Island Ice",          price: 16000 },
+      { name: "Pecera",                   price: 27000 },
+      { name: "Moustro del Lago Ness",    price: 27000 },
+      { name: "Sex Red Jager",            price: 30000 },
+      { name: "B52 Daniels",             price: 21000 },
+    ]
+  },
+  sin_licor: {
+    label: "Sin Licor",
+    items: [
+      { name: "Bob Roy Sin Licor",          price: 13000 },
+      { name: "Piña Colada Sin Licor",      price: 13000 },
+      { name: "San Francisco Sin Licor",    price: 13000 },
+      { name: "Manzana Fresh Sin Licor",    price: 13000 },
+    ]
+  },
+  shots: {
+    label: "Shots",
+    items: [
+      { name: "Tablazo",        price: 7000  },
+      { name: "Coscorrón",      price: 8000  },
+      { name: "Ying Yang",      price: 16000 },
+      { name: "B52",            price: 8000  },
+      { name: "Orgasmo",        price: 8000  },
+      { name: "Pour Nous",      price: 14000 },
+      { name: "Saori",          price: 7000  },
+      { name: "Notre Bar",      price: 8000  },
+      { name: "Despelucador",   price: 8000  },
+      { name: "Cucaracho",      price: 8000  },
+      { name: "Laguna Azul",    price: 8000  },
+      { name: "Daño Cerebral",  price: 7000  },
+    ]
+  },
+  cervezas: {
+    label: "Cervezas",
+    items: [
+      { name: "Corona Blue",            price: 13000 },
+      { name: "Corona Pink",            price: 12000 },
+      { name: "Stella Artois",          price: 9000  },
+      { name: "Cerveza de Mango Biche", price: 8000  },
+      { name: "Cerveza de Colores",     price: 7000  },
+      { name: "Corona",                 price: 8000  },
+      { name: "Budweiser",              price: 9000  },
+      { name: "Smirnoff",               price: 11000 },
+      { name: "BBC",                    price: 11000 },
+      { name: "3 Cordilleras",          price: 11000 },
+      { name: "Michelada",              price: 6000  },
+      { name: "Club Roja",              price: 12000 },
+      { name: "Club Dorada",            price: 6000  },
+      { name: "Club Negra",             price: 5000  },
+      { name: "Águila Light",           price: 4000  },
+      { name: "Poker",                  price: 4500  },
+      { name: "Águila Cero",            price: 4000  },
+      { name: "Club Trigo",             price: 6000  },
+      { name: "Coronita",               price: 5000  },
+      { name: "Andina",                 price: 5000  },
+      { name: "Azteca",                 price: 5000  },
+    ]
+  },
+  dobles: {
+    label: "Dobles",
+    items: [
+      { name: "Aguardiente Cristal",      price: 11000 },
+      { name: "Antioqueño",               price: 11000 },
+      { name: "Baileys",                  price: 15000 },
+      { name: "Brandy",                   price: 8000  },
+      { name: "Ron Medellín",             price: 10000 },
+      { name: "Ron Medellín 8 Años",      price: 10000 },
+      { name: "Ron Viejo de Caldas",      price: 10000 },
+      { name: "Tequila Don Julio Añejo",  price: 24000 },
+      { name: "Tequila Don Julio Repos.", price: 20000 },
+      { name: "Tequila Jose Cuervo",      price: 12000 },
+      { name: "Vodka Absolut",            price: 12000 },
+      { name: "Buchannas 12 Años",        price: 18000 },
+      { name: "Chivas",                   price: 16000 },
+      { name: "Old Parr 12 Años",         price: 19000 },
+      { name: "Sello Negro",              price: 18000 },
+      { name: "Sello Rojo",               price: 13000 },
+      { name: "Jack Daniels",             price: 16000 },
+      { name: "Jack Daniels Honey",       price: 17000 },
+      { name: "Amaretto",                 price: 8000  },
+      { name: "Ginebra Gordons",          price: 10000 },
+      { name: "Jäger",                    price: 13000 },
+      { name: "Licor Chile",              price: 14000 },
+      { name: "Tequila Jimador",          price: 14000 },
+      { name: "Black and White",          price: 10000 },
+    ]
+  },
+  medias: {
+    label: "Medias",
+    items: [
+      { name: "Aguardiente Cristal",   price: 35000  },
+      { name: "Antioqueño",            price: 35000  },
+      { name: "Baileys",               price: 60000  },
+      { name: "Brandy",                price: 38000  },
+      { name: "Ron Medellín",          price: 35000  },
+      { name: "Ron Caldas 5 Años",     price: 43000  },
+      { name: "Ron Medellín 5 Años",   price: 43000  },
+      { name: "Ron Medellín 8 Años",   price: 47000  },
+      { name: "Ron Viejo de Caldas",   price: 35000  },
+      { name: "Tequila Jose Cuervo",   price: 65000  },
+      { name: "Vodka Absolut",         price: 65000  },
+      { name: "Buchannas 12 Años",     price: 95000  },
+      { name: "Old Parr 12 Años",      price: 110000 },
+      { name: "Sello Rojo",            price: 65000  },
+      { name: "Black and White",       price: 45000  },
+    ]
+  },
+  botellas: {
+    label: "Botellas",
+    items: [
+      { name: "Aguardiente Cristal",        price: 60000  },
+      { name: "Aguardiente XS",             price: 50000  },
+      { name: "Antioqueño",                 price: 60000  },
+      { name: "Baileys",                    price: 110000 },
+      { name: "Brandy",                     price: 70000  },
+      { name: "Ron Medellín",               price: 65000  },
+      { name: "Ron Medellín 8 Años",        price: 80000  },
+      { name: "Ron Viejo de Caldas",        price: 65000  },
+      { name: "Tequila Don Julio Reposado", price: 180000 },
+      { name: "Tequila Jose Cuervo",        price: 110000 },
+      { name: "Vodka Absolut",              price: 110000 },
+      { name: "Buchannas 12 Años",          price: 160000 },
+      { name: "Chivas",                     price: 150000 },
+      { name: "Old Parr 12 Años",           price: 165000 },
+      { name: "Sello Rojo",                 price: 110000 },
+      { name: "Jack Daniels Honey",         price: 170000 },
+      { name: "Black and White",            price: 80000  },
+    ]
+  },
+  algo_mas: {
+    label: "Algo Más",
+    items: [
+      { name: "Soda Sabores",            price: 4000  },
+      { name: "Ginger",                  price: 3000  },
+      { name: "Coca Cola",               price: 4000  },
+      { name: "Bretaña Michelada",       price: 4000  },
+      { name: "Agua",                    price: 2000  },
+      { name: "Tea",                     price: 3000  },
+      { name: "Tamarindo Michelado",     price: 5000  },
+      { name: "Granizado de Café",       price: 5000  },
+      { name: "Limonada de Coco",        price: 11000 },
+      { name: "De Todito de Limón",      price: 5000  },
+      { name: "Snacks",                  price: 4000  },
+      { name: "Copa de Vino",            price: 11000 },
+      { name: "Pet Hendrick",            price: 20000 },
+      { name: "Pet Patrón Reposado",     price: 32000 },
+      { name: "Sencillo Jack Daniels",   price: 9500  },
+    ]
+  }
+};
+
+const DEFAULT_PROMOS = [
+  { name: "Promo Margarita",       price: 11000 },
+  { name: "Promo Daño Cerebral",   price: 22000 },
+  { name: "Promo Cosmopolitan",    price: 22000 },
+  { name: "Promo Tequila Sunrise", price: 11000 },
+  { name: "Promo Alexander",       price: 11000 },
+];
+
+const DEFAULT_LAUNCH = { name: "Coctel Mora Azul", price: 15000 };
+const DEFAULT_PIN = "1234";
+</script>
+
+<!-- ═══════════════════════════════════════════════════════
+     MARKUP — VISTA CLIENTE
+═══════════════════════════════════════════════════════ -->
+<header>
+  <div>
+    <div class="logo-oval">
+      <span class="logo-notre">Notre</span>
+      <span class="logo-shots">Shots</span>
+    </div>
+  </div>
+  <div class="header-sub">Coctelería · Shots · Licores</div>
+</header>
+
+<div class="search-wrap">
+  <input class="search-input" type="search" id="search" placeholder="Buscar producto…" autocomplete="off" />
+  <div id="search-results"></div>
+</div>
+
+<div id="promo-section">
+  <div class="promo-banner">
+    <div class="promo-label">Promociones</div>
+    <div class="promo-tag">Válidas de lunes a jueves</div>
+    <div class="promo-grid" id="promo-grid"></div>
+  </div>
+  <div class="launch-banner">
+    <div>
+      <div class="launch-tag">✦ Nuevo Lanzamiento</div>
+      <div class="launch-name" id="launch-name"></div>
+    </div>
+    <span class="launch-price" id="launch-price"></span>
+  </div>
+</div>
+
+<div class="nav-wrap" id="nav-wrap">
+  <nav id="nav"></nav>
+</div>
+<main id="main"></main>
+
+<footer>
+  <div class="footer-location">CC El Progreso · Nivel 2<br>Enseguida de Royal Films · Dosquebradas</div>
+  <button class="admin-btn" id="open-pin-btn" title="Administrar carta">⚙</button>
+  <a class="footer-ig" href="https://www.instagram.com/notreshots" target="_blank">@notreshots</a>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════
+     PIN MODAL
+═══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="pin-modal">
+  <div class="modal">
+    <h3>Administrador</h3>
+    <p>Ingresa el PIN para editar la carta</p>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="dot0"></div>
+      <div class="pin-dot" id="dot1"></div>
+      <div class="pin-dot" id="dot2"></div>
+      <div class="pin-dot" id="dot3"></div>
+    </div>
+    <div class="pin-pad">
+      <button class="pin-key" onclick="pinKey('1')">1</button>
+      <button class="pin-key" onclick="pinKey('2')">2</button>
+      <button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button>
+      <button class="pin-key" onclick="pinKey('5')">5</button>
+      <button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button>
+      <button class="pin-key" onclick="pinKey('8')">8</button>
+      <button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key del" onclick="pinDel()">⌫</button>
+      <button class="pin-key" onclick="pinKey('0')">0</button>
+      <button class="pin-key del" onclick="closePinModal()">✕</button>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     ADMIN PANEL
+═══════════════════════════════════════════════════════ -->
+<div id="admin-panel">
+  <div class="admin-header">
+    <span class="admin-title">Editar Carta</span>
+    <button class="admin-close" onclick="closeAdmin()">Cerrar</button>
+  </div>
+  <div class="admin-body" id="admin-body"></div>
+  <div class="save-bar">
+    <button class="save-btn" onclick="saveChanges()">Guardar cambios</button>
+    <span class="save-status" id="save-status"></span>
+    <button class="reset-btn" onclick="resetToDefault()">Restablecer</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════════════ -->
+<script>
+/* ─── STORAGE ──────────────────────────────────────── */
+const LS_MENU   = 'ns_menu';
+const LS_PROMOS = 'ns_promos';
+const LS_LAUNCH = 'ns_launch';
+const LS_PIN    = 'ns_pin';
+
+function load() {
+  return {
+    menu:   JSON.parse(localStorage.getItem(LS_MENU))   || JSON.parse(JSON.stringify(DEFAULT_MENU)),
+    promos: JSON.parse(localStorage.getItem(LS_PROMOS)) || JSON.parse(JSON.stringify(DEFAULT_PROMOS)),
+    launch: JSON.parse(localStorage.getItem(LS_LAUNCH)) || JSON.parse(JSON.stringify(DEFAULT_LAUNCH)),
+    pin:    localStorage.getItem(LS_PIN) || DEFAULT_PIN,
+  };
+}
+
+let state = load();
+
+/* ─── HELPERS ──────────────────────────────────────── */
+const fmt = n => '$' + Number(n).toLocaleString('es-CO');
+
+function buildItem(item) {
+  const unavail = item.available === false;
+  return `<div class="item${unavail ? ' unavailable' : ''}">
+    <span class="item-name">${item.name}</span>
+    <span class="item-divider"></span>
+    <span class="item-price">${fmt(item.price)}</span>
+  </div>`;
+}
+
+/* ─── RENDER CLIENTE ────────────────────────────────── */
+function renderClient() {
+  const { menu, promos, launch } = state;
+
+  // promos
+  const grid = document.getElementById('promo-grid');
+  grid.innerHTML = promos.map(p => `
+    <div class="promo-item">
+      <span class="promo-name">${p.name}</span>
+      <span class="promo-price">${fmt(p.price)}</span>
+    </div>`).join('');
+
+  // launch
+  document.getElementById('launch-name').textContent = launch.name;
+  document.getElementById('launch-price').textContent = fmt(launch.price);
+
+  // tabs + sections
+  const nav  = document.getElementById('nav');
+  const main = document.getElementById('main');
+  nav.innerHTML = '';
+  main.innerHTML = '';
+  const keys = Object.keys(menu);
+  keys.forEach((key, i) => {
+    const cat = menu[key];
+    const btn = document.createElement('button');
+    btn.textContent = cat.label;
+    btn.dataset.key = key;
+    if (i === 0) btn.classList.add('active');
+    btn.addEventListener('click', () => {
+      activateTab(key);
+      btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    });
+    nav.appendChild(btn);
+
+    const sec = document.createElement('section');
+    sec.id = 'sec-' + key;
+    sec.className = 'section' + (i === 0 ? ' active' : '');
+    sec.innerHTML = `<h2 class="section-title">${cat.label}</h2>
+      <div class="items-list">${cat.items.map(buildItem).join('')}</div>`;
+    main.appendChild(sec);
+  });
+}
+
+function activateTab(key) {
+  document.querySelectorAll('#nav button').forEach(b => b.classList.toggle('active', b.dataset.key === key));
+  document.querySelectorAll('#main .section').forEach(s => s.classList.toggle('active', s.id === 'sec-' + key));
+}
+
+function showClientArea(show) {
+  document.getElementById('promo-section').style.display = show ? '' : 'none';
+  document.getElementById('main').style.display = show ? '' : 'none';
+  document.getElementById('nav-wrap').style.display = show ? '' : 'none';
+}
+
+/* ─── SEARCH ────────────────────────────────────────── */
+document.getElementById('search').addEventListener('input', function() {
+  const q = this.value.trim().toLowerCase();
+  const results = document.getElementById('search-results');
+  if (!q) { results.innerHTML = ''; showClientArea(true); return; }
+  showClientArea(false);
+  let html = '', total = 0;
+  Object.keys(state.menu).forEach(key => {
+    const cat = state.menu[key];
+    const matches = cat.items.filter(it => it.name.toLowerCase().includes(q));
+    if (matches.length) {
+      html += `<div class="result-category">${cat.label}</div><div class="items-list">${matches.map(buildItem).join('')}</div>`;
+      total += matches.length;
+    }
+  });
+  results.innerHTML = total ? html : `<div class="search-empty">No se encontró "${this.value}"</div>`;
+});
+
+/* ─── PIN LOGIC ─────────────────────────────────────── */
+let pinBuffer = '';
+
+document.getElementById('open-pin-btn').addEventListener('click', () => {
+  pinBuffer = '';
+  updateDots();
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-modal').classList.add('open');
+});
+
+function closePinModal() {
+  document.getElementById('pin-modal').classList.remove('open');
+  pinBuffer = '';
+  updateDots();
+}
+
+function updateDots() {
+  for (let i = 0; i < 4; i++) {
+    document.getElementById('dot' + i).classList.toggle('filled', i < pinBuffer.length);
+  }
+}
+
+function pinKey(d) {
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += d;
+  updateDots();
+  if (pinBuffer.length === 4) {
+    setTimeout(() => {
+      if (pinBuffer === state.pin) {
+        closePinModal();
+        openAdmin();
+      } else {
+        document.getElementById('pin-error').textContent = 'PIN incorrecto';
+        pinBuffer = '';
+        updateDots();
+      }
+    }, 200);
+  }
+}
+
+function pinDel() {
+  pinBuffer = pinBuffer.slice(0, -1);
+  document.getElementById('pin-error').textContent = '';
+  updateDots();
+}
+
+/* ─── ADMIN PANEL ───────────────────────────────────── */
+function openAdmin() {
+  renderAdmin();
+  document.getElementById('admin-panel').classList.add('open');
+}
+
+function closeAdmin() {
+  document.getElementById('admin-panel').classList.remove('open');
+}
+
+function renderAdmin() {
+  const { menu, promos, launch, pin } = state;
+  const body = document.getElementById('admin-body');
+  let html = '';
+
+  // Promos
+  html += `<div class="admin-section">
+    <div class="admin-section-header"><span class="admin-section-title">Promociones</span></div>
+    <div class="admin-special">
+      <div class="admin-special-title">Válidas lunes a jueves</div>
+      <div id="admin-promos">`;
+  promos.forEach((p, i) => {
+    html += adminItemRow('promo', i, p.name, p.price, p.available);
+  });
+  html += `</div>
+      <div class="add-row">
+        <input class="admin-input name-input" id="new-promo-name" placeholder="Nombre promo" />
+        <input class="admin-input price-input" id="new-promo-price" placeholder="Precio" type="number" />
+        <button class="add-btn" onclick="addPromo()">+ Agregar</button>
+      </div>
+    </div>
+  </div>`;
+
+  // Launch
+  html += `<div class="admin-section">
+    <div class="admin-section-header"><span class="admin-section-title">Nuevo Lanzamiento</span></div>
+    <div class="admin-special">
+      <div class="admin-item">
+        <input class="admin-input name-input" id="launch-edit-name" value="${launch.name}" />
+        <input class="admin-input price-input" id="launch-edit-price" value="${launch.price}" type="number" />
+      </div>
+    </div>
+  </div>`;
+
+  // Menu categories
+  Object.keys(menu).forEach(key => {
+    const cat = menu[key];
+    html += `<div class="admin-section">
+      <div class="admin-section-header">
+        <span class="admin-section-title">${cat.label}</span>
+      </div>
+      <div id="admin-cat-${key}">`;
+    cat.items.forEach((item, i) => {
+      html += adminItemRow('cat-' + key, i, item.name, item.price, item.available);
+    });
+    html += `</div>
+      <div class="add-row">
+        <input class="admin-input name-input" id="new-${key}-name" placeholder="Nombre producto" />
+        <input class="admin-input price-input" id="new-${key}-price" placeholder="Precio" type="number" />
+        <button class="add-btn" onclick="addItem('${key}')">+ Agregar</button>
+      </div>
+    </div>`;
+  });
+
+  // Change PIN
+  html += `<div class="admin-section">
+    <div class="admin-section-header"><span class="admin-section-title">Seguridad</span></div>
+    <div class="admin-special">
+      <div class="admin-special-title">Cambiar PIN (4 dígitos)</div>
+      <div class="change-pin-row">
+        <input class="admin-input" id="new-pin" placeholder="PIN actual" type="password" maxlength="4" style="width:120px" />
+        <input class="admin-input" id="new-pin2" placeholder="PIN nuevo" type="password" maxlength="4" style="width:120px" />
+        <button class="add-btn" onclick="changePin()">Cambiar</button>
+      </div>
+      <div id="pin-change-msg" style="font-size:.75rem;margin-top:8px;min-height:16px;color:var(--neon)"></div>
+    </div>
+  </div>`;
+
+  body.innerHTML = html;
+}
+
+function adminItemRow(group, idx, name, price, available) {
+  const isAvail = available !== false;
+  return `<div class="admin-item" id="row-${group}-${idx}">
+    <input class="admin-input name-input" data-group="${group}" data-idx="${idx}" data-field="name" value="${name}" />
+    <input class="admin-input price-input" data-group="${group}" data-idx="${idx}" data-field="price" value="${price}" type="number" />
+    <button class="avail-toggle ${isAvail ? 'in' : 'out'}" data-group="${group}" data-idx="${idx}" onclick="toggleAvail('${group}',${idx},this)">${isAvail ? 'Disponible' : 'Agotado'}</button>
+    <button class="del-item-btn" onclick="deleteRow('${group}',${idx})" title="Eliminar">✕</button>
+  </div>`;
+}
+
+/* ─── ADMIN ACTIONS ─────────────────────────────────── */
+function collectAdminData() {
+  const menu   = JSON.parse(JSON.stringify(state.menu));
+  const promos = JSON.parse(JSON.stringify(state.promos));
+
+  // promos
+  document.querySelectorAll('[data-group="promo"]').forEach(el => {
+    const i = +el.dataset.idx;
+    if (!promos[i]) return;
+    if (el.dataset.field === 'name')  promos[i].name  = el.value;
+    if (el.dataset.field === 'price') promos[i].price = +el.value;
+  });
+
+  // launch
+  const launch = {
+    name:  document.getElementById('launch-edit-name')?.value  || state.launch.name,
+    price: +(document.getElementById('launch-edit-price')?.value) || state.launch.price,
+  };
+
+  // categories
+  Object.keys(menu).forEach(key => {
+    document.querySelectorAll(`[data-group="cat-${key}"]`).forEach(el => {
+      const i = +el.dataset.idx;
+      if (!menu[key].items[i]) return;
+      if (el.dataset.field === 'name')  menu[key].items[i].name  = el.value;
+      if (el.dataset.field === 'price') menu[key].items[i].price = +el.value;
+    });
+  });
+
+  return { menu, promos, launch };
+}
+
+function toggleAvail(group, idx, btn) {
+  const { menu, promos, launch } = collectAdminData();
+  let item;
+  if (group === 'promo') {
+    item = promos[idx];
+  } else {
+    const key = group.replace('cat-', '');
+    item = menu[key].items[idx];
+  }
+  if (!item) return;
+  item.available = item.available === false ? true : false;
+  btn.classList.toggle('in',  item.available !== false);
+  btn.classList.toggle('out', item.available === false);
+  btn.textContent = item.available !== false ? 'Disponible' : 'Agotado';
+  state = { ...state, menu, promos, launch };
+}
+
+function addItem(key) {
+  const nameEl  = document.getElementById(`new-${key}-name`);
+  const priceEl = document.getElementById(`new-${key}-price`);
+  const name = nameEl.value.trim();
+  const price = +priceEl.value;
+  if (!name || !price) return;
+
+  const { menu, promos, launch } = collectAdminData();
+  menu[key].items.push({ name, price });
+  state = { ...state, menu, promos, launch };
+  renderAdmin();
+
+  // scroll to added item
+  setTimeout(() => {
+    const container = document.getElementById(`admin-cat-${key}`);
+    if (container) container.lastElementChild?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
+}
+
+function addPromo() {
+  const nameEl  = document.getElementById('new-promo-name');
+  const priceEl = document.getElementById('new-promo-price');
+  const name = nameEl.value.trim();
+  const price = +priceEl.value;
+  if (!name || !price) return;
+
+  const { menu, promos, launch } = collectAdminData();
+  promos.push({ name, price });
+  state = { ...state, menu, promos, launch };
+  renderAdmin();
+}
+
+function deleteRow(group, idx) {
+  const { menu, promos, launch } = collectAdminData();
+  if (group === 'promo') {
+    promos.splice(idx, 1);
+  } else {
+    const key = group.replace('cat-', '');
+    menu[key].items.splice(idx, 1);
+  }
+  state = { ...state, menu, promos, launch };
+  renderAdmin();
+}
+
+function saveChanges() {
+  const { menu, promos, launch } = collectAdminData();
+  state = { ...state, menu, promos, launch };
+  localStorage.setItem(LS_MENU,   JSON.stringify(menu));
+  localStorage.setItem(LS_PROMOS, JSON.stringify(promos));
+  localStorage.setItem(LS_LAUNCH, JSON.stringify(launch));
+  renderClient();
+
+  const status = document.getElementById('save-status');
+  status.textContent = '¡Guardado!';
+  setTimeout(() => status.textContent = '', 2500);
+}
+
+function resetToDefault() {
+  if (!confirm('¿Restaurar la carta a los valores originales? Se perderán todos los cambios.')) return;
+  localStorage.removeItem(LS_MENU);
+  localStorage.removeItem(LS_PROMOS);
+  localStorage.removeItem(LS_LAUNCH);
+  state = load();
+  renderAdmin();
+  renderClient();
+  const status = document.getElementById('save-status');
+  status.textContent = 'Restablecido';
+  setTimeout(() => status.textContent = '', 2500);
+}
+
+function changePin() {
+  const current = document.getElementById('new-pin').value;
+  const newPin  = document.getElementById('new-pin2').value;
+  const msg     = document.getElementById('pin-change-msg');
+  if (current !== state.pin) { msg.style.color = 'var(--danger)'; msg.textContent = 'PIN actual incorrecto'; return; }
+  if (!/^\d{4}$/.test(newPin)) { msg.style.color = 'var(--danger)'; msg.textContent = 'El PIN debe ser 4 dígitos'; return; }
+  state.pin = newPin;
+  localStorage.setItem(LS_PIN, newPin);
+  msg.style.color = 'var(--neon)';
+  msg.textContent = 'PIN actualizado correctamente';
+  document.getElementById('new-pin').value = '';
+  document.getElementById('new-pin2').value = '';
+}
+
+/* ─── INIT ──────────────────────────────────────────── */
+renderClient();
+</script>
+</body>
+</html>
